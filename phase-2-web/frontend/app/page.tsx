@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,15 +29,8 @@ export default function LoginPage() {
           password: formData.password,
         });
         
-        console.log('✅ Login response:', response);
-        console.log('🔑 Token:', response.access_token.substring(0, 20) + '...');
-        console.log('👤 User:', response.user);
-        
         localStorage.setItem('token', response.access_token);
         localStorage.setItem('user', JSON.stringify(response.user));
-        
-        console.log('💾 Token stored in localStorage');
-        console.log('💾 Stored token:', localStorage.getItem('token')?.substring(0, 20) + '...');
         
         router.push('/dashboard');
       } else {
@@ -52,48 +47,104 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated Background Circles */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full mix-blend-multiply filter blur-xl opacity-70"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -100, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 10 + i * 2,
+            repeat: Infinity,
+            delay: i * 0.5,
+          }}
+          style={{
+            background: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24'][i % 4],
+            width: 200 + i * 50,
+            height: 200 + i * 50,
+            left: `${i * 20}%`,
+            top: `${i * 15}%`,
+          }}
+        />
+      ))}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md relative z-10"
+      >
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            📝 Todo App
+        <motion.div
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          className="text-center mb-8"
+        >
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="inline-block text-6xl mb-4"
+          >
+            📝
+          </motion.div>
+          <h1 className="text-5xl font-bold text-white mb-2 drop-shadow-lg">
+            Todo App
           </h1>
-          <p className="text-gray-600">
-            {isLogin ? 'Welcome back!' : 'Create your account'}
-          </p>
-        </div>
+          <motion.p
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-white/90 text-lg"
+          >
+            {isLogin ? 'Welcome back!' : 'Join us today!'}
+          </motion.p>
+        </motion.div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20"
+        >
           {/* Tabs */}
-          <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
-            <button
+          <div className="flex mb-6 bg-gray-100 rounded-2xl p-1">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
                 isLogin
-                  ? 'bg-white text-blue-600 shadow-sm'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Login
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
                 !isLogin
-                  ? 'bg-white text-blue-600 shadow-sm'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Register
-            </button>
+            </motion.button>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+            >
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Username
               </label>
               <input
@@ -103,14 +154,18 @@ export default function LoginPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value })
                 }
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                 placeholder="Enter your username"
               />
-            </div>
+            </motion.div>
 
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email
                 </label>
                 <input
@@ -120,14 +175,18 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   placeholder="Enter your email"
                 />
-              </div>
+              </motion.div>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: isLogin ? 0.2 : 0.3 }}
+            >
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Password
               </label>
               <input
@@ -137,32 +196,65 @@ export default function LoginPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                 placeholder="Enter your password"
               />
-            </div>
+            </motion.div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-medium"
+                >
+                  {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-4 rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
             >
-              {loading ? 'Please wait...' : isLogin ? 'Login' : 'Register'}
-            </button>
+              <motion.div
+                className="absolute inset-0 bg-white"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: '100%' }}
+                transition={{ duration: 0.5 }}
+                style={{ opacity: 0.2 }}
+              />
+              <span className="relative z-10">
+                {loading ? (
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="inline-block"
+                  >
+                    ⏳
+                  </motion.span>
+                ) : (
+                  isLogin ? 'Login' : 'Register'
+                )}
+              </span>
+            </motion.button>
           </form>
-        </div>
+        </motion.div>
 
         {/* Footer */}
-        <p className="text-center text-gray-600 text-sm mt-6">
-          Phase II - Full-Stack Todo Application
-        </p>
-      </div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-center text-white/80 text-sm mt-6 drop-shadow"
+        >
+          Phase II - Full-Stack Todo Application ✨
+        </motion.p>
+      </motion.div>
     </div>
   );
 }

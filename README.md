@@ -305,6 +305,7 @@ Built as a demonstration of Spec-Driven Development using Claude Code.
 
 ---
 
+<<<<<<< HEAD
 **Ready to use!** Run `python3 src/main.py` to start managing your todos.
 
 ## Development History
@@ -318,3 +319,6 @@ See `history/` folder for:
 - Phase II: Full-Stack Web App (Complete)
 - Implementation: 4.5 hours
 - Technologies: 8 (FastAPI, SQLAlchemy, Next.js, TypeScript, Tailwind, JWT, SQLite, Bcrypt)
+=======
+**Ready to use!** Run `python3 src/main.py` to start managing your todos.
+>>>>>>> b98a1c10b9e3940485ced97c52d2c5194d1260e2

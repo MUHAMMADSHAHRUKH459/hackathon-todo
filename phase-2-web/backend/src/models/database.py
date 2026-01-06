@@ -1,14 +1,22 @@
 # src/models/database.py
+import os
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
 
-# Database URL - SQLite for development
-DATABASE_URL = "sqlite:///./todo.db"
+# Get database URL from environment
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./todo.db")
 
 # SQLAlchemy setup
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+    print("📁 Using SQLite database")
+else:
+    # PostgreSQL/Neon connection
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+    print("🐘 Using PostgreSQL (Neon) database")
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -50,4 +58,10 @@ class Task(Base):
 
 # Create tables
 def init_db():
-    Base.metadata.create_all(bind=engine)
+    print(f"🔗 Connecting to database...")
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database tables created/verified!")
+    except Exception as e:
+        print(f"❌ Database error: {e}")
+        raise
