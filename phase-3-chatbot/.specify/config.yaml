@@ -1,0 +1,36 @@
+name: hackathon-todo-phase3
+version: "3.0"
+description: "AI-Powered Todo Chatbot with MCP Tools"
+
+structure:
+  specs_dir: specs
+  features_dir: specs/features
+  api_dir: specs/api
+  database_dir: specs/database
+  ui_dir: specs/ui
+  mcp_dir: specs/mcp
+
+phases:
+  - name: phase3-chatbot
+    features: 
+      - task-crud
+      - authentication
+      - ai-chatbot
+      - mcp-tools
+
+technologies:
+  frontend:
+    - Next.js 16
+    - TypeScript
+    - Tailwind CSS
+    - OpenAI ChatKit
+  backend:
+    - FastAPI
+    - SQLAlchemy
+    - OpenAI SDK
+    - MCP SDK
+  database:
+    - Neon PostgreSQL
+  ai:
+    - OpenRouter API
+    - GPT-3.5-turbo
