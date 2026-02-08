@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: your-dockerhub/todo-backend:latest
+        image: todo-backend:v1
+        imagePullPolicy: Never
         ports:
         - containerPort: 8000
         envFrom:

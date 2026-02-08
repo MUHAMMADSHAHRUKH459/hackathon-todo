@@ -8,7 +8,7 @@ from src.mcp_tools.task_tools import (
 import json
 
 # Hardcoded API credentials (permanent solution)
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 OPENAI_BASE_URL = "https://openrouter.ai/api/v1"
 
 # Initialize OpenAI client with OpenRouter
