@@ -1,0 +1,9 @@
+services:
+  redpanda:
+    image: redpandadata/redpanda:latest
+    command:
+      - redpanda start
+      - --smp 1
+      - --kafka-addr PLAINTEXT://0.0.0.0:9092
+    ports:
+      - "9092:9092"

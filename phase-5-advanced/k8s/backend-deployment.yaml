@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: todo-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "backend-service"
+        dapr.io/app-port: "8000"
+    spec:
+      containers:
+      - name: backend
+        image: your-dockerhub/todo-backend:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: postgres-secret

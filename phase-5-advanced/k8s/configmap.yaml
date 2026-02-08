@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: todo-app
+data:
+  NEXT_PUBLIC_API_URL: "http://backend-service:8000"

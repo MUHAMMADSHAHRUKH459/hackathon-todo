@@ -15,6 +15,8 @@ interface Task {
   title: string;
   description: string;
   completed: boolean;
+  priority: string;  // NEW - Phase 5
+  due_date: string | null;  // NEW - Phase 5
   user_id: number;
   created_at: string;
   updated_at: string;
@@ -53,8 +55,8 @@ export const api = {
     return res.json();
   },
 
-  // Create task
-  async createTask(token: string, data: { title: string; description: string }) {
+  // Create task (Updated - Phase 5)
+  async createTask(token: string, data: { title: string; description: string; priority?: string; due_date?: string }) {
     const res = await fetch(`${API_URL}/api/tasks`, {
       method: 'POST',
       headers: {

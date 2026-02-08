@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 from datetime import datetime
 from typing import Optional
 
@@ -29,16 +29,16 @@ class UserResponse(BaseModel):
 class TaskCreate(BaseModel):
     title: str
     description: str = ""
-    priority: str = "medium"        # NEW
-    due_date: Optional[str] = None  # NEW
+    priority: str = "medium"
+    due_date: Optional[str] = None
 
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     completed: Optional[bool] = None
-    priority: Optional[str] = None        # NEW
-    due_date: Optional[str] = None        # NEW
+    priority: Optional[str] = None
+    due_date: Optional[str] = None
 
 
 class TaskResponse(BaseModel):
@@ -47,13 +47,23 @@ class TaskResponse(BaseModel):
     title: str
     description: str
     completed: bool
-    priority: str                          # NEW
-    due_date: Optional[str] = None         # NEW
+    priority: str
+    due_date: Optional[str] = None
     created_at: str
     updated_at: str
 
     class Config:
         from_attributes = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if v else None
+        }
+
+    @field_validator('created_at', 'updated_at', 'due_date', mode='before')
+    @classmethod
+    def datetime_to_str(cls, v):
+        if isinstance(v, datetime):
+            return v.isoformat()
+        return v
 
 
 # --------------------
